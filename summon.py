@@ -4,6 +4,7 @@ from time import sleep
 
 #Local Files
 from Global import api_key, entry_point
+from map import Map
 
 entry_point = entry_point
 api_key = api_key
@@ -38,7 +39,7 @@ class Summon():
         
     
     def info_match(self): 
-        ids = self.ids[:1]
+        ids = self.ids[1:2]
     
         for id in ids:
             requests = rq.get('{}/lol/match/v4/matches/{}?{}'.format(entry_point, id, api_key)).json()    
@@ -50,18 +51,26 @@ class Summon():
                 if player['player']['currentAccountId'] == self.account:
                     _id = player['participantId']
                     for id in ids: 
-                        self.timeline(id, _id)
+                        x, y = self.timeline(id, _id)
+                        map = Map(x, y)
+                        map.draw()
+                        
+
     
     
     def timeline(self, match, _id):
-        print(_id)
+        x = []
+        y = []
         request = rq.get('{}/lol/match/v3/timelines/by-match/{}?{}'.format(entry_point, match, api_key)).json()
 
         for frame in request['frames']:
             for event in frame['events']:
                 if event['type'] == 'CHAMPION_KILL':
                     if event['killerId'] == _id:
-                        print(event)
+                        x.append(event['position']['x'])
+                        y.append(event['position']['y'])
+        
+        return x, y
                         
 
         
