@@ -1,10 +1,12 @@
 import requests as rq
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 from time import sleep
 
 #Local Files
 from Global import api_key, entry_point
-from map import Map
+
 
 entry_point = entry_point
 api_key = api_key
@@ -19,9 +21,13 @@ class Summon():
         self.ids = []
         self._data = []
         self.games = []
+        self.x = []
+        self.y = []
+        self.img = mpimg.imread('map1.png')
 
         self.init_fetch()    
         self.fetch_matches()
+        
 
     def init_fetch(self): 
         request = rq.get('{}/lol/summoner/v4/summoners/by-name/{}?{}'.format(entry_point, self.name, api_key)).json()
@@ -34,12 +40,12 @@ class Summon():
 
     def fetch_matches(self):
         request = rq.get('{}/lol/match/v4/matchlists/by-account/{}?{}'.format(entry_point, self.account, api_key)).json()
-        
         self.ids = [match['gameId'] for match in request['matches']]
         
     
     def info_match(self): 
-        ids = self.ids[1:2]
+        ids = self.ids[0:5]
+        print(ids)
     
         for id in ids:
             requests = rq.get('{}/lol/match/v4/matches/{}?{}'.format(entry_point, id, api_key)).json()    
@@ -47,17 +53,17 @@ class Summon():
             
         for games in self._data:
             _indeparticipantIdentities = games['participantIdentities']
-            for player in _indeparticipantIdentities:
-                if player['player']['currentAccountId'] == self.account:
-                    _id = player['participantId']
-                    for id in ids: 
-                        x, y = self.timeline(id, _id)
-                        map = Map(x, y)
-                        map.draw()
+            _mapId = games['mapId']
+            if(_mapId == 11):
+                for player in _indeparticipantIdentities:
+                    if player['player']['currentAccountId'] == self.account:
+                        _id = player['participantId']
+                        for id in ids: 
+                            self.timeline(id, _id)
+            else: print(_mapId)
+        
+        self.draw_point()
                         
-
-    
-    
     def timeline(self, match, _id):
         x = []
         y = []
@@ -70,7 +76,19 @@ class Summon():
                         x.append(event['position']['x'])
                         y.append(event['position']['y'])
         
-        return x, y
+        self.x.extend(x)
+        self.y.extend(y)
+
+
+    def draw_point(self):
+        plt.imshow(self.img, aspect='auto', extent=(-1000,14800,-570,14800))
+        plt.axis([-1000, 14800,-570, 14800])
+        plt.axis('off')
+        plt.plot(self.x,self.y, 'ro')
+        plt.savefig('{}_map.png'.format(self.name))
+        plt.show()
+        
+    
                         
 
         
