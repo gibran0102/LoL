@@ -1,13 +1,11 @@
-from fetch import Fetch
+from summon import Summon
 
 
 def main(): 
-    #name = input('Nombre del invocador (solo LAN): ')
-    names = ['Gibran0102', 'Yollowstar']
-    for name in name:
-        new_search = Fetch(name)
-        infor_user = new_search.get_user_info()
-        print(infor_user['id'])
-    
+    input_name = input('Nombre del invocador (solo LAN): ')
+    search = Summon(input_name)
+    print(search.fetch_matches())
+        
+
 
 if __name__ == '__main__': main()
