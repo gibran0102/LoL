@@ -1,2 +1,4 @@
 Global.py
 __pycache__
+*.png
+*.jpg
