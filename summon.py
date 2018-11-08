@@ -17,9 +17,10 @@ class Summon():
         self.account = None
         self.id = None
         self.ids = []
-    
+        self._data = []
+        self.games = []
+
         self.init_fetch()    
-        sleep(2)
         self.fetch_matches()
 
     def init_fetch(self): 
@@ -36,13 +37,38 @@ class Summon():
         
         self.ids = [match['gameId'] for match in request['matches']]
         
-
-        
-
     
     def info_match(self): 
-        ids = self.ids[0:5]
+        ids = self.ids[:3]
         print(ids)
+        playerIdentitie = []
+        
+        for id in ids:
+            requests = rq.get('{}/lol/match/v4/matches/{}?{}'.format(entry_point, id, api_key)).json()    
+            self._data.append(requests)
+            
+        for games in self._data:
+            _indeparticipantIdentities = games['participantIdentities']
+            for player in _indeparticipantIdentities:
+                if player['player']['currentAccountId'] == self.account:
+                    _id = player['participantId']
+                    for game in games['participants']:    
+                        if game['participantId'] == _id: 
+                            self.games.append(game)
+
+
+        for history in self.games:
+            print(history['stats']['kills'])
+                            
+                        
+            
+                    
+
+
+            
+
+
+
 
 
     
