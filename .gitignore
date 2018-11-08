@@ -2,3 +2,5 @@ Global.py
 __pycache__
 *.png
 *.jpg
+maps
+test
