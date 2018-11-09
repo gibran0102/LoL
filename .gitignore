@@ -1,6 +1,9 @@
 Global.py
-__pycache__
 *.png
 *.jpg
 maps
 test
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
