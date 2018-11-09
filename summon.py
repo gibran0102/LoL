@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import random
 
-#Local Files
-
 #entryPoint = https://la1.api.riotgames.com
 #key = Riot developer api key
 from Global import key, entryPoint 
