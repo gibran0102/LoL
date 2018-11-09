@@ -10,6 +10,4 @@ def main():
     search = Summon(input_name)
     search.info_match()    
 
-
-
 if __name__ == '__main__': main()

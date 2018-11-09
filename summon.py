@@ -3,6 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from time import sleep
+import pandas as pd
+import scipy.stats as ss
+ 
+import random
+
 
 #Local Files
 from Global import api_key, entry_point
@@ -21,9 +26,11 @@ class Summon():
         self.ids = []
         self._data = []
         self.games = []
-        self.x = []
-        self.y = []
-        self.img = mpimg.imread('map1.png')
+        self.killX = []
+        self.killY = []
+        self.deadX = []
+        self.deadY = []
+        self.img = mpimg.imread('maps/map1.png')
 
         self.init_fetch()    
         self.fetch_matches()
@@ -54,40 +61,40 @@ class Summon():
         for games in self._data:
             _indeparticipantIdentities = games['participantIdentities']
             _mapId = games['mapId']
-            if(_mapId == 11):
+            if _mapId == 11:
                 for player in _indeparticipantIdentities:
                     if player['player']['currentAccountId'] == self.account:
                         _id = player['participantId']
                         for id in ids: 
                             self.timeline(id, _id)
-            else: print(_mapId)
+
         
         self.draw_point()
                         
     def timeline(self, match, _id):
-        x = []
-        y = []
         request = rq.get('{}/lol/match/v3/timelines/by-match/{}?{}'.format(entry_point, match, api_key)).json()
 
         for frame in request['frames']:
             for event in frame['events']:
                 if event['type'] == 'CHAMPION_KILL':
                     if event['killerId'] == _id:
-                        x.append(event['position']['x'])
-                        y.append(event['position']['y'])
-        
-        self.x.extend(x)
-        self.y.extend(y)
+                        self.killX.append(event['position']['x'])
+                        self.killY.append(event['position']['y'])
+                    if event['victimId'] == _id:
+                        self.deadX.append(event['position']['x'])
+                        self.deadY.append(event['position']['y'])
 
 
     def draw_point(self):
+
         plt.imshow(self.img, aspect='auto', extent=(-1000,14800,-570,14800))
         plt.axis([-1000, 14800,-570, 14800])
         plt.axis('off')
-        plt.plot(self.x,self.y, 'ro')
-        plt.savefig('{}_map.png'.format(self.name))
+        plt.plot(self.killX,self.killY, '*', color='green', alpha=1.0, linewidth=.9, pickradius=0.9)
+        plt.plot(self.deadX,self.deadY, 'X',  color='blue', alpha=.8, linewidth=3.9, pickradius=9.9)
+        plt.savefig('test/{}_map.png'.format(self.name), format='png', transparent= True)
         plt.show()
-        
+    
     
                         
 
