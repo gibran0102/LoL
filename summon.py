@@ -1,20 +1,14 @@
 import requests as rq
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-from time import sleep
-import pandas as pd
-import scipy.stats as ss
- 
+
 import random
 
-
 #Local Files
-from Global import api_key, entry_point
 
-
-entry_point = entry_point
-api_key = api_key
+#entryPoint = https://la1.api.riotgames.com
+#key = Riot developer api key
+from Global import key, entryPoint 
 
 
 class Summon():
@@ -36,11 +30,11 @@ class Summon():
         self.info_match()
         
     def init_fetch(self): 
-        request = rq.get('{}/lol/summoner/v4/summoners/by-name/{}?{}'.format(entry_point, self.name, api_key)).json()
+        request = rq.get('{}/lol/summoner/v4/summoners/by-name/{}?{}'.format(entryPoint, self.name, key)).json()
         self.accountId = request['accountId']
 
     def fetch_matches(self):
-        request = rq.get('{}/lol/match/v4/matchlists/by-account/{}?{}'.format(entry_point, self.accountId, api_key)).json()
+        request = rq.get('{}/lol/match/v4/matchlists/by-account/{}?{}'.format(entryPoint, self.accountId, key)).json()
         self.ids = [match['gameId'] for match in request['matches']]
         
     
@@ -48,7 +42,7 @@ class Summon():
         ids = self.ids[0:1]
 
         for id in ids:
-            self._data.append(rq.get('{}/lol/match/v4/matches/{}?{}'.format(entry_point, id, api_key)).json())
+            self._data.append(rq.get('{}/lol/match/v4/matches/{}?{}'.format(entryPoint, id, key)).json())
             for games in self._data:
                 _indeparticipantIdentities = games['participantIdentities']
                 _mapId = games['mapId']
@@ -60,7 +54,7 @@ class Summon():
         self.draw_point()
                         
     def timeline(self, match, _id):
-        request = rq.get('{}/lol/match/v3/timelines/by-match/{}?{}'.format(entry_point, match, api_key)).json()
+        request = rq.get('{}/lol/match/v3/timelines/by-match/{}?{}'.format(entryPoint, match, key)).json()
 
         for frame in request['frames']:
             for event in frame['events']:
