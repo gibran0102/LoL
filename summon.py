@@ -1,7 +1,6 @@
 import requests as rq
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-
 import random
 
 #Local Files
@@ -23,8 +22,6 @@ class Summon():
         self.deadX = []
         self.deadY = []
         self.img = mpimg.imread('maps/map1.png')
-
-
         self.init_fetch()    
         self.fetch_matches()
         self.info_match()
@@ -37,9 +34,8 @@ class Summon():
         request = rq.get('{}/lol/match/v4/matchlists/by-account/{}?{}'.format(entryPoint, self.accountId, key)).json()
         self.ids = [match['gameId'] for match in request['matches']]
         
-    
     def info_match(self): 
-        ids = self.ids[0:1]
+        ids = self.ids[:12]
 
         for id in ids:
             self._data.append(rq.get('{}/lol/match/v4/matches/{}?{}'.format(entryPoint, id, key)).json())
@@ -66,19 +62,13 @@ class Summon():
                         self.deadX.append(event['position']['x'])
                         self.deadY.append(event['position']['y'])
 
-
     def draw_point(self):
         id = random.randint(1,21)*5
-        print(id)
-        
-        plt.imshow(self.img, aspect='auto', extent=(-1000,14800,-570,14800))
-        plt.axis([-1000, 14800,-570, 14800])
-        
+        plt.imshow(self.img, aspect='auto', extent=(-120,14820, -120,14881))
+        plt.axis([-120, 14820, -120, 14881])
         plt.axis('off')
-        
-        plt.plot(self.killX,self.killY, 'o', color='green', linewidth=5.9)
+        plt.plot(self.killX,self.killY, 'o', color='green', linewidth=5.9)    
         plt.plot(self.deadX,self.deadY, '+',  color='blue', linewidth=5.9)
-
         plt.savefig('test/{}{}_map.png'.format(self.name, id), format='png', transparent= True)
         plt.show()
     
