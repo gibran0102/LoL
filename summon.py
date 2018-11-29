@@ -2,10 +2,13 @@ import requests as rq
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import random
+import json
+
 
 #entryPoint = https://la1.api.riotgames.com
 #key = Riot developer api key
 from Global import key, entryPoint 
+
 
 
 class Summon():
@@ -20,32 +23,39 @@ class Summon():
         self.deadX = []
         self.deadY = []
         self.img = mpimg.imread('maps/map1.png')
+        
         self.init_fetch()    
         self.fetch_matches()
         self.info_match()
         
     def init_fetch(self): 
-        request = rq.get('{}/lol/summoner/v4/summoners/by-name/{}?{}'.format(entryPoint, self.name, key)).json()
+        request = rq.get('{}/lol/summoner/v3/summoners/by-name/{}?{}'.format(entryPoint, self.name, key)).json()
         self.accountId = request['accountId']
 
     def fetch_matches(self):
-        request = rq.get('{}/lol/match/v4/matchlists/by-account/{}?{}'.format(entryPoint, self.accountId, key)).json()
+        request = rq.get('{}/lol/match/v3/matchlists/by-account/{}?{}'.format(entryPoint, self.accountId, key)).json()
         self.ids = [match['gameId'] for match in request['matches']]
         
     def info_match(self): 
-        ids = self.ids[:12]
-
+        ids = self.ids[0:10]
         for id in ids:
-            self._data.append(rq.get('{}/lol/match/v4/matches/{}?{}'.format(entryPoint, id, key)).json())
+            self._data.append(rq.get('{}/lol/match/v3/matches/{}?{}'.format(entryPoint, id, key)).json())
             for games in self._data:
                 _indeparticipantIdentities = games['participantIdentities']
                 _mapId = games['mapId']
                 if _mapId == 11:
                     for player in _indeparticipantIdentities:
-                        if player['player']['currentAccountId'] == self.accountId:
+                        if self.chek_player_id(player):
                             _id = player['participantId']
                             self.timeline(id, _id)
         self.draw_point()
+
+    def chek_player_id(self, player):
+        if player['player']['currentAccountId'] == self.accountId:
+            return True
+        else:
+            return False
+
                         
     def timeline(self, match, _id):
         request = rq.get('{}/lol/match/v3/timelines/by-match/{}?{}'.format(entryPoint, match, key)).json()
@@ -69,23 +79,8 @@ class Summon():
         plt.plot(self.deadX,self.deadY, '+',  color='blue', linewidth=5.9)
         plt.savefig('test/{}{}_map.png'.format(self.name, id), format='png', transparent= True)
         plt.show()
-    
-    
-                        
+
 
         
-                            
-                        
-            
-                    
 
-
-            
-
-
-
-
-
-    
         
-    
