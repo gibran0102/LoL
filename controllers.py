@@ -2,18 +2,18 @@ import api as fetch
 
 
 def summon_info(name):
-    request = fetch.fetch_summon(name)
+    request = fetch.summon_info(name)
     return request['accountId']
 
 def matches_ids(accountId):
-    request = fetch.fetch_matches_ids(accountId)
+    request = fetch.matches_ids(accountId)
     return [match['gameId'] for match in request['matches']]
 
 def matches_info(ids, accountId):
     matchs = []
     identities_ids = []
     for id in ids:
-        matchs.append(fetch.fetch_matches_info(id))
+        matchs.append(fetch.matches_info(id))
         for game in matchs:
             __indeparticipantIdentities = game['participantIdentities']
             __map_id = game['mapId']
@@ -28,7 +28,7 @@ def timeline(match_ids, identity_player):
     kill_pos = []
     dead_pos = []
     for id in match_ids:
-        request = fetch.fetch_timeline(id)
+        request = fetch.timeline(id)
         _organized_timeline(request['frames'], identity_player, kill_pos, dead_pos)
 
     return kill_pos, dead_pos
