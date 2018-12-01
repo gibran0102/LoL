@@ -16,15 +16,13 @@ class Summon():
         self.timeline_position_Kill = []
         self.timeline_position_dead = []
 
-    
     def matchs_ids(self):
         self.matches_ids = matches_ids(self.accountId)
     
     def match_info_data(self): 
-        l = self.matches_ids[:3]
-        self.summon_identities.extend(matches_info(l, self.accountId))
-        self.timeline_position_Kill, self.timeline_position_dead = timeline(l, self.summon_identities)
-
+        max_ids = self.matches_ids[:3]
+        self.summon_identities.extend(matches_info(max_ids, self.accountId))
+        self.timeline_position_Kill, self.timeline_position_dead = timeline(max_ids, self.summon_identities)
 
     def generate_map(self):
         id = random.randint(1,21)*5
@@ -35,4 +33,3 @@ class Summon():
         plt.plot(*zip(*self.timeline_position_dead), '+',  color='blue', linewidth=5.9)
         plt.savefig('test/{}{}_map.png'.format(self.name, id), format='png', transparent= True)
         plt.show()
-        

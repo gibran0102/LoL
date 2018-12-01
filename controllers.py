@@ -14,15 +14,17 @@ def matches_info(ids, accountId):
     identities_ids = []
     for id in ids:
         matchs.append(fetch.matches_info(id))
-        for game in matchs:
-            __indeparticipantIdentities = game['participantIdentities']
-            __map_id = game['mapId']
-            if __map_check(__map_id):
-                for player in __indeparticipantIdentities:
-                    if __identities_check(player, accountId):
-                        identities_ids.append(player['participantId'])    
+        matchs_data(matchs, identities_ids, accountId)    
     return identities_ids
-                        
+      
+def matchs_data(matchs, identities_ids, accountId):
+    for game in matchs:
+        indeparticipant_identities = game['participantIdentities']
+        map_id = game['mapId']
+        if __map_check(map_id):
+            for player in indeparticipant_identities:
+                if __identities_check(player, accountId):
+                    identities_ids.append(player['participantId'])    
 
 def timeline(match_ids, identity_player):
     kill_pos = []
@@ -46,8 +48,6 @@ def _timeline_events(events, identity_player, kill_pos, dead_pos):
                     kill_pos.append([event['position']['x'], event['position']['y']])                    
                 if __event_dead_check(event, identity):
                     dead_pos.append([event['position']['x'], event['position']['y']])
-
-
 
 def __map_check(map_id):
     if map_id == 11:
@@ -78,4 +78,3 @@ def __identities_check(player, accountId):
         return True
     else:
         return False
-        
