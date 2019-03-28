@@ -1,6 +1,5 @@
 import api as fetch
 
-
 def summon_info(name):
     request = fetch.summon_info(name)
     return request['accountId']
@@ -39,7 +38,6 @@ def _organized_timeline(frames, identity_player, kill_pos, dead_pos):
     for frame in frames:
         _timeline_events(frame['events'], identity_player, kill_pos, dead_pos)
 
-
 def _timeline_events(events, identity_player, kill_pos, dead_pos):
     for event in events:
         if __event_type_check(event):
@@ -48,7 +46,7 @@ def _timeline_events(events, identity_player, kill_pos, dead_pos):
                     kill_pos.append([event['position']['x'], event['position']['y']])                    
                 if __event_dead_check(event, identity):
                     dead_pos.append([event['position']['x'], event['position']['y']])
-
+                    
 def __map_check(map_id):
     if map_id == 11:
         return True
