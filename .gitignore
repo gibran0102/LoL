@@ -2,7 +2,7 @@ keys.py
 *.png
 *.jpg
 maps
-test
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
