@@ -14,7 +14,7 @@ def main():
     summon.show_map()
     summon.save_map()
 
-    print('hello world')
+    
     
     
 
