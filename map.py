@@ -13,7 +13,7 @@ class Map():
         plt.axis('off')
 
     def generate(self, x, y):
-        plt.plot(*zip(*x), 'o', color='green', linewidth=5.9, ls='')    
+        plt.plot(*zip(*x), 'o', color='green', linewidth=5.9)    
         plt.plot(*zip(*y), '+',  color='blue', linewidth=5.9)
     
     def save(self, name):
