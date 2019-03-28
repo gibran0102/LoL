@@ -7,13 +7,7 @@ def main():
     summon = Summon(input_name)   
     summon.matchs_ids()
     summon.match_info_data()
-    summon.show_map()
-    summon.save_map()
 
-
-    """
-    BRANCH TEST
-    """
 
 
 if __name__ == '__main__': main()
